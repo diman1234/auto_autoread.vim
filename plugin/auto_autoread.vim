@@ -53,13 +53,14 @@ def autoread(buffer):
 		vim.command('$')
 
 def autoread_loop():
-	buf = vim.current.buffer.number
+	buffer = vim.current.buffer
+	buf = buffer.number
 	while True:
 		zzz = vim.buffers[buf].vars['auto_autoread']
 		if zzz == 0:
 			thread.exit()
 		time.sleep(zzz)
-		autoread(buf)
+		autoread(buffer)
 
 thread.start_new_thread(autoread_loop, ())
 EOF
