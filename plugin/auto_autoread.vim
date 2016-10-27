@@ -44,9 +44,13 @@ import time, vim
 try: import thread
 except ImportError: import _thread as thread # Py3
 
-def autoread():
+def autoread(buffer):
+	line = len(buffer)
 	vim.command('checktime')
 	vim.command('redraw')
+	lineDiff = len(buffer)
+	if line != lineDiff:
+		vim.command('$')
 
 def autoread_loop():
 	buf = vim.current.buffer.number
@@ -55,7 +59,7 @@ def autoread_loop():
 		if zzz == 0:
 			thread.exit()
 		time.sleep(zzz)
-		autoread()
+		autoread(buf)
 
 thread.start_new_thread(autoread_loop, ())
 EOF
@@ -70,7 +74,7 @@ endfun
 "
 "	let l:oldshell = &shell " For maximum compatibility (fish/csh users)
 "	let &shell = '/bin/sh'
-"	let l:cmd = 'vim --servername ' . v:servername . 
+"	let l:cmd = 'vim --servername ' . v:servername .
 "		\ ' --remote-send "<C-\><C-n>:checktime<CR>" --remote-send "<C-\><C-n>:redraw<CR>"'
 "
 "	" TODO: This doesn't get killed if we quit Vim
